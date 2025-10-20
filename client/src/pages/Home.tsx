@@ -9,13 +9,13 @@ import { ParticleBackground } from '@/components/ParticleBackground';
 import { CursorFollow } from '@/components/CursorFollow';
 import { MatrixRain } from '@/components/MatrixRain';
 import { FeedbackModal } from '@/components/FeedbackModal';
-import { RotatingWaveform } from '@/components/RotatingWaveform';
+import { HolographicLogo } from '@/components/HolographicLogo';
 import { AIChat } from '@/components/AIChat';
 import {
   Brain,
   Code,
   Cpu,
-  Shield,
+  Gamepad2,
   ChevronDown,
   Github,
   Linkedin,
@@ -30,6 +30,8 @@ import {
   Mic,
   Moon,
   Sun,
+  Layers,
+  Box,
 } from 'lucide-react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
@@ -38,22 +40,22 @@ import type { Project, BlogPost } from '@shared/schema';
 
 const experiences = [
   {
-    role: 'AI Engineer',
+    role: 'Game Developer & Simulation Engineer',
     company: 'VrindaAI Project',
     period: '2024 - Present',
-    description: 'Leading development of an advanced multi-agent AI assistant with natural language understanding and task automation capabilities.',
+    description: 'Creating immersive game experiences and realistic simulations using cutting-edge AI technology, procedural generation, and advanced physics engines.',
   },
   {
-    role: 'IoT Developer',
-    company: 'Academic Projects',
+    role: 'Unreal Engine Developer',
+    company: 'Freelance & Academic Projects',
     period: '2023 - 2024',
-    description: 'Built IoT solutions for smart home automation and industrial monitoring systems with focus on security.',
+    description: 'Built interactive 3D environments, gameplay mechanics, and AI-driven NPCs using Unreal Engine 5 with C++ and Blueprints.',
   },
   {
-    role: 'Cybersecurity Researcher',
-    company: 'Independent Study',
+    role: 'Unity & Simulation Developer',
+    company: 'Independent Projects',
     period: '2022 - 2023',
-    description: 'Researching vulnerability assessment, penetration testing methodologies, and security automation tools.',
+    description: 'Developed physics-based simulations, procedural world generation systems, and multiplayer game prototypes using Unity and custom engines.',
   },
 ];
 
@@ -128,7 +130,7 @@ export default function Home() {
     }, 2000);
     
     const timer2 = setTimeout(() => {
-      setHeroSubtext("AI Engineer | IoT Innovator | Creator of VrindaAI");
+      setHeroSubtext("Game Developer | Simulation Engineer | Creator of VrindaAI");
     }, 3000);
     
     return () => {
@@ -363,31 +365,31 @@ export default function Home() {
               <Card className="backdrop-blur-xl bg-black/40 border-cyan-500/20 p-8 lg:p-10 hover:bg-black/50 hover:border-cyan-500/40 transition-all duration-300 shadow-2xl shadow-cyan-500/10">
                 <div className="space-y-6">
                   <p className="text-lg leading-relaxed text-foreground">
-                    I'm an AI Engineer with a passion for building intelligent systems that push the boundaries of innovation.
-                    My journey encompasses AI, IoT, and Cybersecurity, with a relentless focus on creating practical, impactful solutions.
+                    I'm a Game Developer and Simulation Engineer with a passion for creating immersive experiences that push the boundaries of interactive entertainment.
+                    My journey encompasses game development, realistic simulations, and AI-powered gameplay, with a relentless focus on crafting engaging and innovative digital worlds.
                   </p>
                   <p className="text-lg leading-relaxed text-muted-foreground">
-                    Currently leading VrindaAI—an advanced multi-agent AI assistant that combines natural language processing
-                    with powerful automation capabilities. I thrive at the intersection of AI and creative tools, from 3D automation
-                    pipelines to intelligent video editing systems.
+                    Currently leading VrindaAI—an advanced multi-agent AI assistant designed to enhance game development workflows
+                    through intelligent automation. I specialize in Unreal Engine 5, Unity, procedural generation, physics simulations, and creating
+                    lifelike AI behaviors that bring virtual characters to life.
                   </p>
                   <p className="text-lg leading-relaxed text-muted-foreground">
-                    My vision is to democratize AI technology, making sophisticated systems accessible and practical for everyday applications.
-                    When I'm not coding, I'm deep-diving into AI safety research, IoT security architectures, and neural network optimization.
+                    My vision is to merge cutting-edge AI with game development, creating experiences that are not only fun but also intelligent and adaptive.
+                    When I'm not coding, I'm exploring new rendering techniques, designing complex game mechanics, and optimizing performance for real-time applications.
                   </p>
                 </div>
               </Card>
             </motion.div>
             
             <div>
-              <RotatingWaveform />
+              <HolographicLogo />
               
               <div className="grid grid-cols-2 gap-6 mt-8">
                 {[
-                  { icon: Brain, label: 'AI Engineering', color: 'from-cyan-500 to-cyan-600' },
-                  { icon: Cpu, label: 'IoT Systems', color: 'from-violet-500 to-violet-600' },
-                  { icon: Shield, label: 'Cybersecurity', color: 'from-cyan-500 to-violet-500' },
-                  { icon: Code, label: 'Automation', color: 'from-violet-500 to-cyan-500' },
+                  { icon: Gamepad2, label: 'Game Development', color: 'from-cyan-500 to-cyan-600' },
+                  { icon: Box, label: '3D Simulations', color: 'from-violet-500 to-violet-600' },
+                  { icon: Brain, label: 'AI & Gameplay', color: 'from-cyan-500 to-violet-500' },
+                  { icon: Layers, label: 'Procedural Gen', color: 'from-violet-500 to-cyan-500' },
                 ].map((skill, idx) => (
                   <motion.div
                     key={skill.label}

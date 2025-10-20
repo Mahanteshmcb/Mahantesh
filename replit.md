@@ -2,11 +2,23 @@
 
 ## Overview
 
-This is a modern, futuristic portfolio website for Mahantesh Biradar, an AI Engineer specializing in IoT and Cybersecurity. The application showcases projects, experiences, and provides an interactive AI chatbot for visitors to learn more about his work. The design follows a cyberpunk-inspired aesthetic with dark mode, neon gradients (cyan and purple), and glassmorphism effects.
+This is a modern, futuristic portfolio website for Mahantesh Biradar, a Game Developer and Simulation Engineer specializing in interactive experiences, procedural generation, and AI-powered gameplay. The application showcases game development projects, simulations, and provides an interactive AI chatbot for visitors to learn more about his work. The design follows a cyberpunk-inspired aesthetic with dark mode, neon gradients (cyan and purple), and glassmorphism effects.
 
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
+
+## Recent Changes
+
+**October 20, 2025**
+- Replaced rotating MB logo with holographic 3D gaming logo featuring animated gamepad icon and particle effects
+- Enhanced ParticleBackground component with 120+ particles (up from 50), animated flowing grid waves, and improved glow effects
+- Updated entire portfolio focus from cybersecurity/IoT to game development and simulations
+- Changed all project examples to game development focused (procedural generation, physics simulations, multiplayer games, VR development)
+- Updated blog posts to focus on game development topics (AI NPCs, Unreal Engine optimization, procedural generation)
+- Updated experience section to highlight Unity, Unreal Engine, and simulation development work
+- Created comprehensive README.md with detailed customization guide, file explanations, and Git workflow instructions
+- All skills, descriptions, and hero text now reflect game development expertise
 
 ## System Architecture
 
@@ -74,7 +86,7 @@ Preferred communication style: Simple, everyday language.
 **Storage Abstraction**: 
 - `IStorage` interface defining data access methods
 - `MemStorage` in-memory implementation for development/testing with seeded data
-- Includes hardcoded project examples (VrindaAI, Blender Automation, Unreal Engine Integration, AI Video Editing Agent)
+- Includes game development projects (VrindaAI Game Assistant, Procedural World Generator, Physics-Based Combat Sim, Multiplayer Racing Game, AI Behavior Tree System, VR Flight Simulator)
 - Hardcoded experience timeline and chatbot response logic
 
 **Validation**: Zod schemas (via `drizzle-zod`) for runtime type validation of insert operations.
@@ -114,8 +126,10 @@ Currently not implemented. The application is a public portfolio site without au
 - Environment-based configuration (NODE_ENV)
 
 **Special Features**:
-- Particle background animation canvas
+- Enhanced particle background with 120+ particles, animated grid waves, and glowing effects
+- Holographic 3D gaming logo with rotating animations and particle trails
 - AI chatbot with rule-based responses (currently hardcoded, not using external LLM API)
 - Animated gradient text effects
-- Glassmorphic card designs
+- Glassmorphic card designs with hover effects
 - Responsive design with mobile hooks
+- Gaming-themed visual elements (gamepad icons, procedural generation effects)
