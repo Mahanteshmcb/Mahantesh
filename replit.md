@@ -11,14 +11,20 @@ Preferred communication style: Simple, everyday language.
 ## Recent Changes
 
 **October 20, 2025**
+- **Fixed dark/light theme toggle**: Properly adds/removes "dark" class, persists preference to localStorage, icons swap correctly
+- **Enhanced UI with unique design elements**:
+  - Created animated SectionDivider component with gradient dots and pulsing effects
+  - Added section dividers between major sections (Hero, About, Projects, Experience, Blog)
+  - Enhanced navbar with theme-responsive background and gradient logo
+  - Improved card styling with light/dark variants and hover animations (translate-y, enhanced shadows)
+  - All components now properly respond to theme changes
+- **Created Vercel deployment configuration**:
+  - vercel.json configured for frontend-only static deployment
+  - Comprehensive VERCEL_DEPLOYMENT.md guide covering GitHub integration, deployment options, and backend hosting alternatives (Railway, Render, Replit)
 - Replaced rotating MB logo with holographic 3D gaming logo featuring animated gamepad icon and particle effects
-- Enhanced ParticleBackground component with 120+ particles (up from 50), animated flowing grid waves, and improved glow effects
+- Enhanced ParticleBackground component with 120+ particles, animated flowing grid waves, and improved glow effects
 - Updated entire portfolio focus from cybersecurity/IoT to game development and simulations
-- Changed all project examples to game development focused (procedural generation, physics simulations, multiplayer games, VR development)
-- Updated blog posts to focus on game development topics (AI NPCs, Unreal Engine optimization, procedural generation)
-- Updated experience section to highlight Unity, Unreal Engine, and simulation development work
-- Created comprehensive README.md with detailed customization guide, file explanations, and Git workflow instructions
-- All skills, descriptions, and hero text now reflect game development expertise
+- Created comprehensive README.md with detailed customization guide
 
 ## System Architecture
 
@@ -31,9 +37,12 @@ Preferred communication style: Simple, everyday language.
 **Styling Approach**: 
 - Tailwind CSS for utility-first styling
 - Custom CSS variables for theming (defined in `index.css`)
-- Dark mode by default with a futuristic cyberpunk color palette
-- Glassmorphism effects (`backdrop-blur-xl`, `bg-white/5`)
+- **Fully functional dark/light theme system** with localStorage persistence
+- Theme toggle button in navbar (Sun icon for dark mode, Moon for light mode)
+- All components respond to theme changes with proper light/dark variants
+- Glassmorphism effects (`backdrop-blur-xl`, `bg-white/70 dark:bg-black/40`)
 - Neon gradient accents using cyan (189 97% 55%) and purple (270 91% 65%)
+- Animated section dividers with pulsing gradient dots
 
 **State Management & Data Fetching**:
 - TanStack Query (React Query) for server state management and caching
@@ -44,9 +53,10 @@ Preferred communication style: Simple, everyday language.
 
 **Design System**:
 - Typography: Space Grotesk font family (with Inter fallback) for futuristic aesthetic
-- Color palette: Deep charcoal backgrounds, cyan/purple neon accents, neutral text colors
+- Color palette: Deep charcoal backgrounds (dark) / light backgrounds (light), cyan/purple neon accents
 - Spacing: Tailwind's standard spacing scale (4, 8, 12, 16, 20, 24, 32)
 - Border radius: Custom values (.5625rem, .375rem, .1875rem)
+- Micro-interactions: Hover effects with scale, translate-y, and shadow enhancements
 
 ### Backend Architecture
 
@@ -126,10 +136,19 @@ Currently not implemented. The application is a public portfolio site without au
 - Environment-based configuration (NODE_ENV)
 
 **Special Features**:
+- **Working dark/light theme toggle** with localStorage persistence
+- **Animated section dividers** with pulsing gradient dots between major sections
 - Enhanced particle background with 120+ particles, animated grid waves, and glowing effects
 - Holographic 3D gaming logo with rotating animations and particle trails
 - AI chatbot with rule-based responses (currently hardcoded, not using external LLM API)
 - Animated gradient text effects
-- Glassmorphic card designs with hover effects
+- Glassmorphic card designs with enhanced hover effects (translate, shadows)
+- Theme-responsive navbar and all UI components
 - Responsive design with mobile hooks
 - Gaming-themed visual elements (gamepad icons, procedural generation effects)
+
+**Deployment**:
+- Configured for Vercel deployment (frontend-only, static)
+- Comprehensive deployment guide with backend hosting options
+- GitHub integration ready
+- Environment variable support for API endpoints
