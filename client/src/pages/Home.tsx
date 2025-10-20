@@ -11,6 +11,7 @@ import { MatrixRain } from '@/components/MatrixRain';
 import { FeedbackModal } from '@/components/FeedbackModal';
 import { HolographicLogo } from '@/components/HolographicLogo';
 import { AIChat } from '@/components/AIChat';
+import { SectionDivider } from '@/components/SectionDivider';
 import {
   Brain,
   Code,
@@ -101,7 +102,7 @@ export default function Home() {
   const [heroText, setHeroText] = useState('Initializing Neural Interface...');
   const [heroSubtext, setHeroSubtext] = useState('');
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
-  const [aiMode, setAiMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
   const { toast } = useToast();
 
   const { data: projects = [], isLoading: projectsLoading } = useQuery<Project[]>({
@@ -125,6 +126,19 @@ export default function Home() {
   });
 
   useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const shouldBeDark = savedTheme ? savedTheme === 'dark' : prefersDark;
+    
+    setIsDarkMode(shouldBeDark);
+    if (shouldBeDark) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, []);
+
+  useEffect(() => {
     const timer1 = setTimeout(() => {
       setHeroText("Hi, I'm Mahantesh Biradar");
     }, 2000);
@@ -138,6 +152,19 @@ export default function Home() {
       clearTimeout(timer2);
     };
   }, []);
+
+  const toggleTheme = () => {
+    const newTheme = !isDarkMode;
+    setIsDarkMode(newTheme);
+    
+    if (newTheme) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  };
 
   const handleContactSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -155,19 +182,20 @@ export default function Home() {
   };
 
   return (
-    <div className={`relative min-h-screen transition-all duration-500 ${aiMode ? 'brightness-75' : ''}`}>
+    <div className="relative min-h-screen transition-colors duration-500">
       <CursorFollow />
       <ParticleBackground />
       <MatrixRain />
       <FeedbackModal isOpen={isFeedbackOpen} onClose={() => setIsFeedbackOpen(false)} />
       
-      <nav className="fixed top-0 left-0 right-0 z-40 backdrop-blur-xl bg-black/60 border-b border-cyan-500/20">
+      <nav className="fixed top-0 left-0 right-0 z-40 backdrop-blur-xl bg-background/80 dark:bg-black/60 border-b border-cyan-500/20 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="font-bold text-xl bg-gradient-to-r from-cyan-400 to-violet-400 bg-clip-text text-transparent"
+              className="font-bold text-2xl bg-gradient-to-r from-cyan-400 via-violet-400 to-pink-400 bg-clip-text text-transparent hover:scale-110 transition-transform cursor-pointer"
+              onClick={() => scrollToSection('hero')}
             >
               MB
             </motion.div>
@@ -189,12 +217,12 @@ export default function Home() {
               <Button
                 size="icon"
                 variant="ghost"
-                onClick={() => setAiMode(!aiMode)}
-                className="hover-elevate"
-                data-testid="button-ai-mode"
-                title="AI Mode"
+                onClick={toggleTheme}
+                className="hover-elevate transition-transform hover:scale-110"
+                data-testid="button-theme-toggle"
+                title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
               >
-                {aiMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
               </Button>
               <a href="https://github.com/mahanteshbiradar" target="_blank" rel="noopener noreferrer" data-testid="link-github">
                 <Button size="icon" variant="ghost" className="hover-elevate">
