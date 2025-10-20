@@ -371,6 +371,8 @@ export default function Home() {
         </div>
       </section>
 
+      <SectionDivider />
+
       <AnimatedSection id="about" className="py-20 lg:py-32 relative z-10">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <motion.h2
@@ -390,7 +392,7 @@ export default function Home() {
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
             >
-              <Card className="backdrop-blur-xl bg-black/40 border-cyan-500/20 p-8 lg:p-10 hover:bg-black/50 hover:border-cyan-500/40 transition-all duration-300 shadow-2xl shadow-cyan-500/10">
+              <Card className="backdrop-blur-xl bg-black/40 dark:bg-black/40 bg-white/80 dark:bg-black/40 border-cyan-500/20 p-8 lg:p-10 hover:bg-black/50 dark:hover:bg-black/50 hover:bg-white/90 dark:hover:bg-black/50 hover:border-cyan-500/40 transition-all duration-300 shadow-2xl shadow-cyan-500/10 hover:shadow-cyan-500/30 hover:-translate-y-1">
                 <div className="space-y-6">
                   <p className="text-lg leading-relaxed text-foreground">
                     I'm a Game Developer and Simulation Engineer with a passion for creating immersive experiences that push the boundaries of interactive entertainment.
@@ -427,7 +429,7 @@ export default function Home() {
                     viewport={{ once: true }}
                     whileHover={{ scale: 1.05 }}
                   >
-                    <Card className="backdrop-blur-xl bg-black/40 border-cyan-500/20 p-6 hover:bg-black/50 hover:border-cyan-500/40 transition-all duration-300 hover:shadow-xl hover:shadow-cyan-500/20">
+                    <Card className="backdrop-blur-xl bg-white/70 dark:bg-black/40 border-cyan-500/20 p-6 hover:bg-white/90 dark:hover:bg-black/50 hover:border-cyan-500/40 transition-all duration-300 hover:shadow-xl hover:shadow-cyan-500/20 hover:-translate-y-1">
                       <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${skill.color} flex items-center justify-center mb-4`}>
                         <skill.icon className="w-6 h-6 text-white" />
                       </div>
@@ -440,6 +442,8 @@ export default function Home() {
           </div>
         </div>
       </AnimatedSection>
+
+      <SectionDivider />
 
       <AnimatedSection id="projects" className="py-20 lg:py-32 relative z-10">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
@@ -496,6 +500,8 @@ export default function Home() {
         </div>
       </AnimatedSection>
 
+      <SectionDivider />
+
       <AnimatedSection id="experience" className="py-20 lg:py-32 relative z-10">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <h2 className="text-4xl lg:text-5xl font-bold mb-12 text-center bg-gradient-to-r from-cyan-400 to-violet-400 bg-clip-text text-transparent" data-testid="text-experience-title">
@@ -547,6 +553,8 @@ export default function Home() {
           </div>
         </div>
       </AnimatedSection>
+
+      <SectionDivider />
 
       <AnimatedSection id="blog" className="py-20 lg:py-32 relative z-10">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
