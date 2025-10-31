@@ -1,10 +1,29 @@
 import express, { type Request, Response, NextFunction } from "express";
+import path from "path";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// Serve any public documents placed in server/public/documents at
+// http://<host>:<port>/documents/<filename>
+// Place your PDFs (resume, certificates) into server/public/documents/
+// and they'll be available publicly.
+app.use(
+  "/documents",
+  // First try serving from a tracked folder at the repo root so uploaded
+  // documents can be committed to the repository during development.
+  express.static(path.resolve(import.meta.dirname, "..", "static_documents")),
+);
+
+// Fallback to server/public/documents (this folder is ignored by git and
+// can be used for local-only documents).
+app.use(
+  "/documents",
+  express.static(path.resolve(import.meta.dirname, "public", "documents")),
+);
 
 app.use((req, res, next) => {
   const start = Date.now();
@@ -64,8 +83,12 @@ app.use((req, res, next) => {
   server.listen({
     port,
     host: "0.0.0.0",
-    reusePort: true,
+    // reusePort is not supported on some platforms (notably some Windows
+    // Node builds) and can cause ENOTSUP. Only enable it when running on
+    // non-windows platforms.
+    ...(process.platform === 'win32' ? {} : { reusePort: true }),
   }, () => {
-    log(`serving on port ${port}`);
+    log(`serving on port ${port}`); 
+    log('localhost:5000');
   });
 })();
