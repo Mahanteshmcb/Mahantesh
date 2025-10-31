@@ -41,7 +41,7 @@ import type { Project, BlogPost } from '@shared/schema';
 
 const experiences = [
   {
-    role: 'Game Developer & Simulation Engineer',
+    role: 'Simulation Developer',
     company: 'VrindaAI Project',
     period: '2024 - Present',
     description: 'Creating immersive game experiences and realistic simulations using cutting-edge AI technology, procedural generation, and advanced physics engines.',
@@ -53,10 +53,10 @@ const experiences = [
     description: 'Built interactive 3D environments, gameplay mechanics, and AI-driven NPCs using Unreal Engine 5 with C++ and Blueprints.',
   },
   {
-    role: 'Unity & Simulation Developer',
+    role: 'AI & Software Developer',
     company: 'Independent Projects',
     period: '2022 - 2023',
-    description: 'Developed physics-based simulations, procedural world generation systems, and multiplayer game prototypes using Unity and custom engines.',
+    description: 'Developed VrindaAI, an AI assistant for game development, leveraging natural language processing and multi-agent systems to streamline workflows.',
   },
 ];
 
@@ -144,7 +144,7 @@ export default function Home() {
     }, 2000);
     
     const timer2 = setTimeout(() => {
-      setHeroSubtext("Game Developer | Simulation Engineer | Creator of VrindaAI");
+      setHeroSubtext("Game Developer | AI & Software Engineer | Creator of VrindaAI");
     }, 3000);
     
     return () => {
@@ -224,12 +224,12 @@ export default function Home() {
               >
                 {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
               </Button>
-              <a href="https://github.com/mahanteshbiradar" target="_blank" rel="noopener noreferrer" data-testid="link-github">
+              <a href="https://github.com/Mahanteshmcb" target="_blank" rel="noopener noreferrer" data-testid="link-github">
                 <Button size="icon" variant="ghost" className="hover-elevate">
                   <Github className="w-5 h-5" />
                 </Button>
               </a>
-              <a href="https://linkedin.com/in/mahanteshbiradar" target="_blank" rel="noopener noreferrer" data-testid="link-linkedin">
+              <a href="https://linkedin.com/in/mcbmahantesh" target="_blank" rel="noopener noreferrer" data-testid="link-linkedin">
                 <Button size="icon" variant="ghost" className="hover-elevate">
                   <Linkedin className="w-5 h-5" />
                 </Button>
@@ -240,6 +240,7 @@ export default function Home() {
       </nav>
 
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
+        <div className="animated-hero-gradient" aria-hidden />
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-20 text-center relative z-10">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -270,7 +271,7 @@ export default function Home() {
               />
             </motion.h1>
             
-            <motion.p
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: heroSubtext ? 1 : 0, y: 0 }}
               transition={{ duration: 0.6 }}
@@ -278,7 +279,7 @@ export default function Home() {
               data-testid="text-hero-tagline"
             >
               {heroSubtext}
-            </motion.p>
+            </motion.div>
             
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -289,18 +290,18 @@ export default function Home() {
               <Button
                 size="lg"
                 onClick={() => scrollToSection('contact')}
-                className="rounded-full px-8 py-6 text-base bg-gradient-to-r from-cyan-500 to-violet-500 hover:from-cyan-600 hover:to-violet-600 border-0 shadow-lg shadow-cyan-500/50"
+                className="rounded-full px-8 py-6 text-base bg-gradient-to-r from-cyan-500 to-violet-500 hover:from-cyan-600 hover:to-violet-600 border-0 shadow-lg shadow-cyan-500/50 hover-lift"
                 data-testid="button-meet-ai"
               >
                 <Sparkles className="w-5 h-5 mr-2" />
                 Meet My AI Assistant
               </Button>
               
-              <a href="https://drive.google.com/file/d/your_resume_id/view" target="_blank" rel="noopener noreferrer">
+              <a href="https://drive.google.com/file/d/1SRKNJKOl50e6zmBhRRLdHpXo39G1j0Fl/view?usp=sharing" target="_blank" rel="noopener noreferrer">
                 <Button
                   size="lg"
                   variant="outline"
-                  className="rounded-full px-8 py-6 text-base bg-white/5 backdrop-blur-sm border-cyan-500/30 hover:border-cyan-500/50"
+                  className="rounded-full px-8 py-6 text-base bg-white/5 backdrop-blur-sm border-cyan-500/30 hover:border-cyan-500/50 link-underline"
                   data-testid="button-resume"
                 >
                   <FileText className="w-5 h-5 mr-2" />
@@ -308,11 +309,11 @@ export default function Home() {
                 </Button>
               </a>
               
-              <a href="https://drive.google.com/drive/folders/your_certificates_folder_id" target="_blank" rel="noopener noreferrer">
+              <a href="https://drive.google.com/drive/folders/10XPk9lxtohS5H4PWy7rAQUGOoT-R0fZ1?usp=sharing" target="_blank" rel="noopener noreferrer">
                 <Button
                   size="lg"
                   variant="outline"
-                  className="rounded-full px-8 py-6 text-base bg-white/5 backdrop-blur-sm border-violet-500/30 hover:border-violet-500/50"
+                  className="rounded-full px-8 py-6 text-base bg-white/5 backdrop-blur-sm border-violet-500/30 hover:border-violet-500/50 link-underline"
                   data-testid="button-certificates"
                 >
                   <Award className="w-5 h-5 mr-2" />
@@ -327,21 +328,21 @@ export default function Home() {
               transition={{ delay: 0.7, duration: 0.6 }}
               className="flex flex-wrap gap-3 justify-center items-center"
             >
-              <a href="https://linkedin.com/in/mahanteshbiradar" target="_blank" rel="noopener noreferrer">
-                <Button size="sm" variant="ghost" className="hover-elevate">
+              <a href="https://linkedin.com/in/mcbmahantesh" target="_blank" rel="noopener noreferrer">
+                <Button size="sm" variant="ghost" className="hover-elevate link-underline">
                   <Linkedin className="w-4 h-4 mr-2" />
                   LinkedIn
                 </Button>
               </a>
               
-              <a href="https://github.com/mahanteshbiradar" target="_blank" rel="noopener noreferrer">
-                <Button size="sm" variant="ghost" className="hover-elevate">
+              <a href="https://github.com/Mahanteshmcb" target="_blank" rel="noopener noreferrer">
+                <Button size="sm" variant="ghost" className="hover-elevate link-underline">
                   <Github className="w-4 h-4 mr-2" />
                   GitHub
                 </Button>
               </a>
               
-              <a href="mailto:mahantesh@example.com">
+              <a href="mailto:mcbmahantesh@gmail.com">
                 <Button size="sm" variant="ghost" className="hover-elevate">
                   <Mail className="w-4 h-4 mr-2" />
                   Email Me
@@ -351,7 +352,7 @@ export default function Home() {
               <Button 
                 size="sm" 
                 variant="ghost" 
-                className="hover-elevate"
+                className="hover-elevate link-underline"
                 onClick={() => setIsFeedbackOpen(true)}
                 data-testid="button-feedback"
               >
@@ -361,13 +362,13 @@ export default function Home() {
             </motion.div>
           </motion.div>
           
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ repeat: Infinity, duration: 2 }}
-            className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-          >
-            <ChevronDown className="w-8 h-8 text-cyan-400" />
-          </motion.div>
+            <motion.div
+              animate={{ y: [0, 10, 0] }}
+              transition={{ repeat: Infinity, duration: 2 }}
+              className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+            >
+              <ChevronDown className="w-8 h-8 text-cyan-400" />
+            </motion.div>
         </div>
       </section>
 
@@ -412,13 +413,22 @@ export default function Home() {
             </motion.div>
             
             <div>
-              <HolographicLogo />
+              <motion.div
+                initial={{ rotate: 0, y: 0 }}
+                animate={{ y: [0, -6, 0] }}
+                transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
+                className="mx-auto w-full max-w-xs"
+              >
+                <div className="hover-lift card-deep-shadow inline-block">
+                  <HolographicLogo />
+                </div>
+              </motion.div>
               
               <div className="grid grid-cols-2 gap-6 mt-8">
                 {[
                   { icon: Gamepad2, label: 'Game Development', color: 'from-cyan-500 to-cyan-600' },
                   { icon: Box, label: '3D Simulations', color: 'from-violet-500 to-violet-600' },
-                  { icon: Brain, label: 'AI & Gameplay', color: 'from-cyan-500 to-violet-500' },
+                  { icon: Brain, label: 'AI & Software Devlopment', color: 'from-cyan-500 to-violet-500' },
                   { icon: Layers, label: 'Procedural Gen', color: 'from-violet-500 to-cyan-500' },
                 ].map((skill, idx) => (
                   <motion.div
@@ -538,7 +548,7 @@ export default function Home() {
             </div>
             
             <div className="text-center mt-12">
-              <a href="https://drive.google.com/file/d/your_resume_id/view" target="_blank" rel="noopener noreferrer">
+              <a href="https://drive.google.com/file/d/1SRKNJKOl50e6zmBhRRLdHpXo39G1j0Fl/view?usp=sharing" target="_blank" rel="noopener noreferrer">
                 <Button
                   size="lg"
                   variant="outline"
@@ -642,7 +652,10 @@ export default function Home() {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => scrollToSection('about')}
+                  onClick={() => {
+                    // dispatch a global event to open the AI chat
+                    window.dispatchEvent(new Event('open-ai-chat'))
+                  }}
                   className="flex-1 rounded-full bg-white/5 backdrop-blur-sm border-violet-500/30 hover:border-violet-500/50"
                   data-testid="button-talk-to-ai"
                 >
@@ -654,31 +667,31 @@ export default function Home() {
 
             <div className="mt-8 pt-8 border-t border-white/10">
               <div className="flex flex-wrap justify-center gap-4">
-                <a href="https://github.com/mahanteshbiradar" target="_blank" rel="noopener noreferrer">
+                <a href="https://github.com/Mahanteshmcb" target="_blank" rel="noopener noreferrer">
                   <Button size="sm" variant="ghost" className="hover-elevate">
                     <Github className="w-4 h-4 mr-2" />
                     GitHub
                   </Button>
                 </a>
-                <a href="https://linkedin.com/in/mahanteshbiradar" target="_blank" rel="noopener noreferrer">
+                <a href="https://linkedin.com/in/mcbmahantesh" target="_blank" rel="noopener noreferrer">
                   <Button size="sm" variant="ghost" className="hover-elevate">
                     <Linkedin className="w-4 h-4 mr-2" />
                     LinkedIn
                   </Button>
                 </a>
-                <a href="https://drive.google.com/file/d/your_resume_id/view" target="_blank" rel="noopener noreferrer">
+                <a href="https://drive.google.com/file/d/1SRKNJKOl50e6zmBhRRLdHpXo39G1j0Fl/view?usp=sharing" target="_blank" rel="noopener noreferrer">
                   <Button size="sm" variant="ghost" className="hover-elevate">
                     <FileText className="w-4 h-4 mr-2" />
                     Resume
                   </Button>
                 </a>
-                <a href="https://drive.google.com/drive/folders/your_certificates_folder_id" target="_blank" rel="noopener noreferrer">
+                <a href="https://drive.google.com/drive/folders/10XPk9lxtohS5H4PWy7rAQUGOoT-R0fZ1?usp=sharing" target="_blank" rel="noopener noreferrer">
                   <Button size="sm" variant="ghost" className="hover-elevate">
                     <Award className="w-4 h-4 mr-2" />
                     Certificates
                   </Button>
                 </a>
-                <a href="mailto:mahantesh@example.com">
+                <a href="mailto:mcbmahantesh@gmail.com">
                   <Button size="sm" variant="ghost" className="hover-elevate">
                     <Mail className="w-4 h-4 mr-2" />
                     Email
@@ -698,16 +711,16 @@ export default function Home() {
             </p>
             
             <div className="flex justify-center gap-6">
-              <a href="https://github.com/mahanteshbiradar" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-cyan-400 transition-colors">
+              <a href="https://github.com/Mahanteshmcb" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-cyan-400 transition-colors">
                 <Github className="w-5 h-5" />
               </a>
-              <a href="https://linkedin.com/in/mahanteshbiradar" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-cyan-400 transition-colors">
+              <a href="https://linkedin.com/in/mcbmahantesh" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-cyan-400 transition-colors">
                 <Linkedin className="w-5 h-5" />
               </a>
-              <a href="mailto:mahantesh@example.com" className="text-muted-foreground hover:text-cyan-400 transition-colors">
+              <a href="mailto:mcbmahantesh@gmail.com" className="text-muted-foreground hover:text-cyan-400 transition-colors">
                 <Mail className="w-5 h-5" />
               </a>
-              <a href="https://mahanteshbiradar.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-cyan-400 transition-colors">
+              <a href="https://mcbmahantesh.netlify.app" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-cyan-400 transition-colors">
                 <Globe className="w-5 h-5" />
               </a>
             </div>

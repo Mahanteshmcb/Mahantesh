@@ -1,5 +1,6 @@
 import express, { type Request, Response, NextFunction } from "express";
 import path from "path";
+import fs from "fs/promises";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
@@ -13,17 +14,22 @@ app.use(express.urlencoded({ extended: false }));
 // and they'll be available publicly.
 app.use(
   "/documents",
-  // First try serving from a tracked folder at the repo root so uploaded
-  // documents can be committed to the repository during development.
-  express.static(path.resolve(import.meta.dirname, "..", "static_documents")),
-);
-
-// Fallback to server/public/documents (this folder is ignored by git and
-// can be used for local-only documents).
-app.use(
-  "/documents",
   express.static(path.resolve(import.meta.dirname, "public", "documents")),
 );
+
+// Debug helper: list files available from the server/public/documents folder.
+// Useful to verify the server actually sees the files when debugging 404s
+// from the client. This does not modify existing behavior.
+app.get("/documents/debug", async (_req: Request, res: Response) => {
+  const folder = path.resolve(import.meta.dirname, "public", "documents");
+  const result: Record<string, string[] | string> = { files: [], folder };
+  try {
+    result.files = await fs.readdir(folder);
+  } catch (e: any) {
+    result.files = [];
+  }
+  res.json(result);
+});
 
 app.use((req, res, next) => {
   const start = Date.now();

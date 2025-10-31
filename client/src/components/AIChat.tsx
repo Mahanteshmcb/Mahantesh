@@ -22,7 +22,32 @@ export function AIChat() {
   ]);
   const [input, setInput] = useState('');
   const [voiceMode, setVoiceMode] = useState(false);
+  const [isListening, setIsListening] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const recognitionRef = useRef<any>(null);
+
+  // Listen for a global event so other parts of the site can open the chat
+  useEffect(() => {
+    const onOpen = () => {
+      setIsOpen(true);
+      // focus input after a short delay to allow animation
+      setTimeout(() => inputRef.current?.focus(), 250);
+    };
+    window.addEventListener('open-ai-chat', onOpen as EventListener);
+    return () => window.removeEventListener('open-ai-chat', onOpen as EventListener);
+  }, []);
+
+  // Clean up recognition on unmount
+  useEffect(() => {
+    return () => {
+      try {
+        recognitionRef.current?.stop?.();
+      } catch (e) {
+        /* ignore */
+      }
+    };
+  }, []);
 
   const chatMutation = useMutation({
     mutationFn: async (message: string) => {
@@ -30,9 +55,114 @@ export function AIChat() {
       return response.json() as Promise<{ response: string }>;
     },
     onSuccess: (data) => {
-      setMessages((prev) => [...prev, { role: 'assistant', content: data.response }]);
+      // Reveal assistant response with a typewriter effect for better interactivity
+      const full = data.response || '';
+      // Append a placeholder assistant message and then reveal text progressively
+      setMessages((prev) => [...prev, { role: 'assistant', content: '' }]);
+      // reveal into the last message
+      let idx = 0;
+      const interval = Math.max(8, Math.floor(1200 / Math.max(20, full.length)));
+      const timer = setInterval(() => {
+        idx += 1;
+        setMessages((prev) => {
+          const copy = [...prev];
+          // find last assistant message index
+          const last = copy.map((m) => m.role).lastIndexOf('assistant');
+          if (last >= 0) {
+            copy[last] = { ...copy[last], content: full.slice(0, idx) };
+          }
+          return copy;
+        });
+        if (idx >= full.length) clearInterval(timer);
+      }, interval);
+      // if voiceMode enabled, speak the response when finished
+      setTimeout(() => {
+        if (voiceMode && typeof window !== 'undefined' && 'speechSynthesis' in window) {
+          const utter = new SpeechSynthesisUtterance(full);
+          utter.lang = 'en-US';
+          window.speechSynthesis.cancel();
+          window.speechSynthesis.speak(utter);
+        }
+      }, Math.max(600, full.length * interval));
+    },
+    onError: (err: any) => {
+      const message = err?.message || 'Failed to get response';
+      setMessages((prev) => [...prev, { role: 'assistant', content: `Error: ${message}` }]);
     },
   });
+
+  // Helpers for Web Speech API (SpeechRecognition)
+  const supportsSpeechRecognition = () => {
+    return typeof window !== 'undefined' && (!!(window as any).SpeechRecognition || !!(window as any).webkitSpeechRecognition);
+  };
+
+  const startRecognition = () => {
+    if (!supportsSpeechRecognition()) {
+      setMessages((prev) => [...prev, { role: 'assistant', content: 'Speech recognition is not supported in this browser.' }]);
+      return;
+    }
+
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    try {
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.interimResults = true;
+      recognition.maxAlternatives = 1;
+
+      recognition.onstart = () => {
+        setIsListening(true);
+      };
+
+      recognition.onerror = (ev: any) => {
+        setIsListening(false);
+        setMessages((prev) => [...prev, { role: 'assistant', content: `Speech recognition error: ${ev?.error || ev?.message || 'unknown'}` }]);
+      };
+
+      recognition.onend = () => {
+        setIsListening(false);
+      };
+
+      recognition.onresult = (event: any) => {
+        let interim = '';
+        let finalTranscript = '';
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          const res = event.results[i];
+          const t = res[0]?.transcript || '';
+          if (res.isFinal) finalTranscript += t;
+          else interim += t;
+        }
+        // show interim transcript in the input so user can see
+        if (interim) {
+          setInput((prev) => interim);
+        }
+        if (finalTranscript) {
+          // final: send it as a message
+          const text = finalTranscript.trim();
+          if (text) {
+            setMessages((prev) => [...prev, { role: 'user', content: text }]);
+            chatMutation.mutate(text);
+            setInput('');
+          }
+        }
+      };
+
+      recognition.start();
+      recognitionRef.current = recognition;
+    } catch (err: any) {
+      setMessages((prev) => [...prev, { role: 'assistant', content: `Failed to start speech recognition: ${err?.message || err}` }]);
+      setIsListening(false);
+    }
+  };
+
+  const stopRecognition = () => {
+    try {
+      recognitionRef.current?.stop?.();
+    } catch (e) {
+      // ignore
+    }
+    recognitionRef.current = null;
+    setIsListening(false);
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -46,9 +176,19 @@ export function AIChat() {
     if (!input.trim()) return;
 
     setMessages((prev) => [...prev, { role: 'user', content: input }]);
-    chatMutation.mutate(input);
+    // optimistic UI: keep input while mutation runs
+    const toSend = input;
     setInput('');
+    chatMutation.mutate(toSend);
   };
+
+  // Quick prompts
+  const quickPrompts = [
+    'Tell me about VrindaAI',
+    'Explain your Blender automation project',
+    'What are your core skills?',
+    'How can I contact you?'
+  ];
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -76,12 +216,19 @@ export function AIChat() {
                   </div>
                   <div>
                     <h3 className="font-bold text-foreground" data-testid="text-chat-title">Talk to Mahantesh's AI</h3>
-                    <p className="text-xs text-muted-foreground flex items-center gap-1">
+                    <p className="text-xs text-muted-foreground flex items-center gap-2">
                       {voiceMode ? (
-                        <>
-                          <Mic className="w-3 h-3" />
-                          Voice Mode Active
-                        </>
+                        isListening ? (
+                          <span className="mic-indicator">
+                            <span className="mic-dot" aria-hidden />
+                            <span className="text-[11px]">Listening...</span>
+                          </span>
+                        ) : (
+                          <>
+                            <Mic className="w-3 h-3" />
+                            Voice Mode Active
+                          </>
+                        )
                       ) : (
                         'Ask me anything!'
                       )}
@@ -92,10 +239,22 @@ export function AIChat() {
                   <Button
                     size="icon"
                     variant="ghost"
-                    onClick={() => setVoiceMode(!voiceMode)}
+                    onClick={() => {
+                      // toggle voice mode; start/stop recognition
+                      const next = !voiceMode;
+                      setVoiceMode(next);
+                      if (next) {
+                        // open chat when enabling voice
+                        setIsOpen(true);
+                        setTimeout(() => inputRef.current?.focus(), 250);
+                        startRecognition();
+                      } else {
+                        stopRecognition();
+                      }
+                    }}
                     className={`hover-elevate ${voiceMode ? 'text-cyan-400' : ''}`}
                     data-testid="button-voice-toggle"
-                    title="Toggle Voice Mode (Coming Soon)"
+                    title="Toggle Voice Mode (start/stop speech recognition)"
                   >
                     {voiceMode ? <Mic className="w-5 h-5" /> : <MicOff className="w-5 h-5" />}
                   </Button>
@@ -146,11 +305,22 @@ export function AIChat() {
                 <div ref={messagesEndRef} />
               </div>
 
+              <div className="p-2 px-4">
+                <div className="flex gap-2 flex-wrap">
+                  {quickPrompts.map((q) => (
+                    <button key={q} className="text-xs px-3 py-1 rounded-md bg-white/6 hover:bg-white/10 text-foreground" onClick={() => { setInput(q); }}>
+                      {q}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               <div className="p-4 border-t border-white/10">
                 <div className="flex gap-2">
                   <Input
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
+                    ref={(el: any) => (inputRef.current = el)}
                     onKeyPress={handleKeyPress}
                     placeholder="Ask about my projects..."
                     className="flex-1 bg-white/5 border-white/10 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 rounded-full"
@@ -168,9 +338,18 @@ export function AIChat() {
                 </div>
                 
                 {voiceMode && (
-                  <div className="mt-2 text-xs text-center text-cyan-400 flex items-center justify-center gap-1">
-                    <Mic className="w-3 h-3" />
-                    Voice mode placeholder - Connect to speech recognition API
+                  <div className="mt-2 text-xs text-center text-cyan-400 flex items-center justify-center gap-2">
+                    {isListening ? (
+                      <>
+                        <span className="mic-dot" aria-hidden />
+                        <span>Listening — speak now</span>
+                      </>
+                    ) : (
+                      <>
+                        <Mic className="w-3 h-3" />
+                        <span>Voice input enabled</span>
+                      </>
+                    )}
                   </div>
                 )}
               </div>

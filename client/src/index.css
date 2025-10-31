@@ -321,6 +321,76 @@
     background-color: var(--elevate-2);
   }
 
+  /* Mic pulse for voice recognition indicator */
+  .mic-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--sidebar-primary-foreground);
+    font-weight: 600;
+  }
+
+  .mic-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, rgba(56,189,248,1), rgba(139,92,246,1));
+    box-shadow: 0 0 12px rgba(139,92,246,0.25), 0 0 6px rgba(56,189,248,0.25);
+    animation: micPulse 1.2s infinite ease-in-out;
+  }
+
+  @keyframes micPulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.6); opacity: 0.55; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  /* Micro-interactions and aesthetic utilities */
+  .hover-lift {
+    transition: transform 220ms cubic-bezier(.2,.9,.2,1), box-shadow 220ms ease;
+    will-change: transform;
+  }
+  .hover-lift:hover {
+    transform: translateY(-6px) scale(1.01);
+  }
+
+  .link-underline {
+    position: relative;
+    background-image: linear-gradient(currentColor, currentColor);
+    background-position: 0 100%;
+    background-size: 0% 2px;
+    background-repeat: no-repeat;
+    transition: background-size 220ms ease, color 160ms ease;
+  }
+  .link-underline:hover {
+    background-size: 100% 2px;
+  }
+
+  .card-deep-shadow {
+    box-shadow: 0 10px 30px -10px hsl(260 80% 50% / 0.12), 0 6px 18px -6px hsl(200 80% 50% / 0.06);
+  }
+
+  /* Animated hero gradient layer */
+  .animated-hero-gradient {
+    position: absolute;
+    inset: -10%;
+    background: radial-gradient(600px 400px at 10% 20%, rgba(56,189,248,0.12), transparent 10%),
+                radial-gradient(500px 350px at 85% 80%, rgba(139,92,246,0.12), transparent 12%),
+                linear-gradient(90deg, rgba(2,6,23,0.0), rgba(0,0,0,0.02));
+    filter: blur(48px) saturate(120%);
+    transform: translateZ(0);
+    pointer-events: none;
+    z-index: 0;
+    animation: heroGradientShift 12s linear infinite;
+    mix-blend-mode: screen;
+  }
+
+  @keyframes heroGradientShift {
+    0% { transform: translateY(0) translateX(0) scale(1); }
+    50% { transform: translateY(-8px) translateX(6px) scale(1.02); }
+    100% { transform: translateY(0) translateX(0) scale(1); }
+  }
+
   /* If there's a 1px border, adjust the inset so that it covers that parent's border */
   .border.hover-elevate:not(.no-hover-interaction-elevate)::after,
   .border.active-elevate:not(.no-active-interaction-elevate)::after,
