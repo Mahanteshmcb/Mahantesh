@@ -34,8 +34,8 @@ Location: `client/src/pages/Home.tsx`
 - Line 314: Email - `mahantesh@example.com`
 
 **Resume & Certificates:**
-- Line 269: Resume link - `https://drive.google.com/file/d/your_resume_id/view`
-- Line 281: Certificates folder - `https://drive.google.com/drive/folders/your_certificates_folder_id`
+- Line 269: Resume link - `https://drive.google.com/file/d/1SRKNJKOl50e6zmBhRRLdHpXo39G1j0Fl/view?usp=sharing`
+- Line 281: Certificates folder - `https://drive.google.com/drive/folders/10XPk9lxtohS5H4PWy7rAQUGOoT-R0fZ1`
 - Line 505: Download Resume link (duplicate)
 
 **Navigation Logo:**
