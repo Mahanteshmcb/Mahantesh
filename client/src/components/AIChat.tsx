@@ -96,14 +96,46 @@ export function AIChat() {
     return typeof window !== 'undefined' && (!!(window as any).SpeechRecognition || !!(window as any).webkitSpeechRecognition);
   };
 
-  const startRecognition = () => {
+  const startRecognition = async () => {
     if (!supportsSpeechRecognition()) {
-      setMessages((prev) => [...prev, { role: 'assistant', content: 'Speech recognition is not supported in this browser.' }]);
+      setMessages((prev) => [...prev, { role: 'assistant', content: 'Speech recognition is not supported in this browser. Try Chrome or Edge.' }]);
+      setVoiceMode(false);
       return;
     }
 
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    // If Permissions API available, check the microphone permission first
     try {
+      if ((navigator as any).permissions && (navigator as any).permissions.query) {
+        const permStatus = await (navigator as any).permissions.query({ name: 'microphone' as any });
+        if (permStatus.state === 'denied') {
+          setMessages((prev) => [...prev, { role: 'assistant', content: 'Microphone access is blocked for this site. Please allow microphone permissions in your browser/site settings and reload the page.' }]);
+          setVoiceMode(false);
+          setIsListening(false);
+          return;
+        }
+      }
+    } catch (e) {
+      // ignore and proceed to request getUserMedia which will prompt the user if needed
+    }
+
+    // Request microphone access (this will prompt the user if needed)
+    try {
+      await (navigator as any).mediaDevices.getUserMedia({ audio: true });
+    } catch (err: any) {
+      const name = err?.name || err?.message || 'PermissionDenied';
+      if (name === 'NotAllowedError' || name === 'PermissionDeniedError') {
+        setMessages((prev) => [...prev, { role: 'assistant', content: 'Microphone permission was denied. Please enable microphone access for this site in your browser settings.' }]);
+      } else {
+        setMessages((prev) => [...prev, { role: 'assistant', content: `Unable to access microphone: ${name}` }]);
+      }
+      setVoiceMode(false);
+      setIsListening(false);
+      return;
+    }
+
+    // At this point, getUserMedia succeeded — start SpeechRecognition
+    try {
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
       const recognition = new SpeechRecognition();
       recognition.lang = 'en-US';
       recognition.interimResults = true;
@@ -115,7 +147,15 @@ export function AIChat() {
 
       recognition.onerror = (ev: any) => {
         setIsListening(false);
-        setMessages((prev) => [...prev, { role: 'assistant', content: `Speech recognition error: ${ev?.error || ev?.message || 'unknown'}` }]);
+        const errCode = ev?.error || ev?.message || 'unknown';
+        if (errCode === 'not-allowed' || errCode === 'PermissionDeniedError' || errCode === 'NotAllowedError') {
+          setMessages((prev) => [...prev, { role: 'assistant', content: 'Microphone access was denied. Please allow microphone permissions in your browser settings.' }]);
+          setVoiceMode(false);
+        } else if (errCode === 'no-speech' || errCode === 'audio-capture') {
+          setMessages((prev) => [...prev, { role: 'assistant', content: 'No audio was detected. Check your microphone connection and try again.' }]);
+        } else {
+          setMessages((prev) => [...prev, { role: 'assistant', content: `Speech recognition error: ${errCode}` }]);
+        }
       };
 
       recognition.onend = () => {
@@ -131,12 +171,8 @@ export function AIChat() {
           if (res.isFinal) finalTranscript += t;
           else interim += t;
         }
-        // show interim transcript in the input so user can see
-        if (interim) {
-          setInput((prev) => interim);
-        }
+        if (interim) setInput(interim);
         if (finalTranscript) {
-          // final: send it as a message
           const text = finalTranscript.trim();
           if (text) {
             setMessages((prev) => [...prev, { role: 'user', content: text }]);
@@ -148,9 +184,12 @@ export function AIChat() {
 
       recognition.start();
       recognitionRef.current = recognition;
+      // Only enable voice mode after recognition has started successfully
+      setVoiceMode(true);
     } catch (err: any) {
       setMessages((prev) => [...prev, { role: 'assistant', content: `Failed to start speech recognition: ${err?.message || err}` }]);
       setIsListening(false);
+      setVoiceMode(false);
     }
   };
 
@@ -162,6 +201,7 @@ export function AIChat() {
     }
     recognitionRef.current = null;
     setIsListening(false);
+    setVoiceMode(false);
   };
 
   const scrollToBottom = () => {
@@ -240,16 +280,15 @@ export function AIChat() {
                     size="icon"
                     variant="ghost"
                     onClick={() => {
-                      // toggle voice mode; start/stop recognition
-                      const next = !voiceMode;
-                      setVoiceMode(next);
-                      if (next) {
-                        // open chat when enabling voice
+                      // If voice is active, stop it. If not, attempt to start recognition.
+                      if (voiceMode) {
+                        stopRecognition();
+                        setVoiceMode(false);
+                      } else {
+                        // open chat and attempt to start recognition; only enable voiceMode after success
                         setIsOpen(true);
                         setTimeout(() => inputRef.current?.focus(), 250);
                         startRecognition();
-                      } else {
-                        stopRecognition();
                       }
                     }}
                     className={`hover-elevate ${voiceMode ? 'text-cyan-400' : ''}`}

@@ -34,6 +34,8 @@ import {
   Layers,
   Box,
 } from 'lucide-react';
+import ProjectModal from '@/components/ProjectModal';
+import ProjectCard from '@/components/ProjectCard';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
@@ -108,6 +110,9 @@ export default function Home() {
   const { data: projects = [], isLoading: projectsLoading } = useQuery<Project[]>({
     queryKey: ['/api/projects'],
   });
+
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
 
   const { data: blogPosts = [], isLoading: blogLoading } = useQuery<BlogPost[]>({
     queryKey: ['/api/blog'],
@@ -289,7 +294,9 @@ export default function Home() {
             >
               <Button
                 size="lg"
-                onClick={() => scrollToSection('contact')}
+                onClick={() => {
+                  window.dispatchEvent(new CustomEvent('open-ai-chat'));
+                }}
                 className="rounded-full px-8 py-6 text-base bg-gradient-to-r from-cyan-500 to-violet-500 hover:from-cyan-600 hover:to-violet-600 border-0 shadow-lg shadow-cyan-500/50 hover-lift"
                 data-testid="button-meet-ai"
               >
@@ -461,52 +468,19 @@ export default function Home() {
             Featured Projects
           </h2>
           
-          {projectsLoading ? (
+              {projectsLoading ? (
             <div className="text-center text-muted-foreground">Loading projects...</div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {projects.map((project, idx) => (
-                <motion.div
-                  key={project.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: idx * 0.1, duration: 0.6 }}
-                  viewport={{ once: true }}
-                  whileHover={{ scale: 1.05, y: -5 }}
-                  data-testid={`card-project-${project.id}`}
-                >
-                  <Card className="h-full backdrop-blur-xl bg-black/40 border-cyan-500/20 p-8 hover:bg-black/50 hover:border-violet-500/40 transition-all duration-300 shadow-2xl shadow-violet-500/10 group relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-violet-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    
-                    <div className="relative z-10">
-                      <div className="mb-4">
-                        <Zap className="w-10 h-10 text-cyan-400 group-hover:text-violet-400 transition-colors" />
-                      </div>
-                      
-                      <h3 className="text-2xl font-bold mb-3 bg-gradient-to-r from-cyan-400 to-violet-400 bg-clip-text text-transparent">
-                        {project.title}
-                      </h3>
-                      
-                      <p className="text-muted-foreground mb-6 leading-relaxed">
-                        {project.description}
-                      </p>
-                      
-                      <div className="flex flex-wrap gap-2">
-                        {project.technologies.map((tech) => (
-                          <span
-                            key={tech}
-                            className="bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 rounded-full px-4 py-1.5 text-sm"
-                          >
-                            {tech}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </Card>
-                </motion.div>
+                <div key={project.id} data-testid={`card-project-${project.id}`}>
+                  <ProjectCard project={project} onView={(p) => { setSelectedProject(p); setIsProjectModalOpen(true); }} />
+                </div>
               ))}
             </div>
           )}
+          
+          <ProjectModal project={selectedProject} isOpen={isProjectModalOpen} onClose={() => setIsProjectModalOpen(false)} />
         </div>
       </AnimatedSection>
 

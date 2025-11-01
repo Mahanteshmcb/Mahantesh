@@ -1,0 +1,14 @@
+{
+  // Ignore Tailwind/PostCSS at-rules and @apply warnings from the built-in CSS validator
+  "css.lint.unknownAtRules": "ignore",
+  "scss.lint.unknownAtRules": "ignore",
+  "less.lint.unknownAtRules": "ignore",
+
+  // Ignore empty ruleset warnings which can happen with utility layers/placeholders
+  "css.lint.emptyRules": "ignore",
+  "scss.lint.emptyRules": "ignore",
+  "less.lint.emptyRules": "ignore",
+
+  // Disable automatic JSON schema downloads (avoids schemastore network errors in offline environments)
+  "json.schemaDownload.enable": false
+}
